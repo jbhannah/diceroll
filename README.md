@@ -1,5 +1,7 @@
 # diceroll
 
+[![Build Status](https://travis-ci.com/jbhannah/diceroll.svg?branch=master)](https://travis-ci.com/jbhannah/diceroll)
+
 A command-line dice roller.
 
 ```bash
