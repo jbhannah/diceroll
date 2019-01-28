@@ -5,5 +5,5 @@ authors = ["Jesse B. Hannah <jesse@jbhannah.net>"]
 
 [dependencies]
 lazy_static = "1"
-rand = "0.6.1"
+rand = "0.6.5"
 regex = "1"
