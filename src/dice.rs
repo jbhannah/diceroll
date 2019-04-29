@@ -63,14 +63,15 @@ impl Dice {
 
     pub fn roll(&self) -> u16 {
         let mut rng = ::rand::thread_rng();
-        self.sample(&mut rng)
+        let roll = self.sample(&mut rng).into_iter();
+        roll.sum()
     }
 
-    fn sample<R: ::rand::Rng>(&self, rng: &mut R) -> u16 {
+    fn sample<R: ::rand::Rng>(&self, rng: &mut R) -> Vec<u16> {
         Uniform::from(1..self.sides + 1)
             .sample_iter(rng)
             .take(self.count as usize)
-            .sum()
+            .collect()
     }
 }
 
@@ -112,6 +113,6 @@ mod tests {
         let dice = Dice::new("4d4").unwrap();
         let mut rng = StepRng::new(1, 0);
         let s = dice.sample(&mut rng);
-        assert_eq!(s, 4);
+        assert_eq!(s, vec![1, 1, 1, 1]);
     }
 }
