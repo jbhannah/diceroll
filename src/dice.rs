@@ -127,9 +127,10 @@ impl Dice {
         )
     }
 
-    pub fn roll(&self) -> u16 {
+    pub fn roll(&self) -> (u16, Vec<u16>) {
         let mut rng = ::rand::thread_rng();
-        let roll = self.sample(&mut rng).into_iter();
+        let rolls = self.sample(&mut rng);
+        let roll = rolls.clone().into_iter();
 
         let sum: u16 = roll.clone().sum::<u16>()
             - match self.drop {
@@ -138,11 +139,14 @@ impl Dice {
                 Drop::None => 0,
             };
 
-        if -self.modifier < sum as i16 {
-            (sum as i16 + self.modifier) as u16
-        } else {
-            0
-        }
+        (
+            if -self.modifier < sum as i16 {
+                (sum as i16 + self.modifier) as u16
+            } else {
+                0
+            },
+            rolls,
+        )
     }
 
     fn sample<R: ::rand::Rng>(&self, rng: &mut R) -> Vec<u16> {
@@ -203,7 +207,7 @@ mod tests {
     #[test]
     fn roll() {
         let dice = Dice::new("4d4").unwrap();
-        let r = dice.roll();
+        let (r, _) = dice.roll();
         assert!(r >= 4);
         assert!(r <= 16);
     }

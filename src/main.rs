@@ -20,7 +20,14 @@ fn main() {
                 .multiple(true)
                 .required(true),
         )
+        .arg(
+            Arg::with_name("verbose")
+                .long("verbose")
+                .short("v")
+                .help("Displays details of each roll"),
+        )
         .get_matches();
+    let verbose = matches.is_present("verbose");
 
     for expr in matches.values_of("EXPR").unwrap() {
         let dice = match Dice::new(&expr) {
@@ -31,6 +38,11 @@ fn main() {
             }
         };
 
-        println!("{}: {}", dice.expr(), dice.roll());
+        let (roll, rolls) = dice.roll();
+        println!("{}: {}", dice.expr(), roll);
+
+        if verbose {
+            println!("Rolls: {:?}", rolls);
+        }
     }
 }
