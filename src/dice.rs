@@ -20,6 +20,21 @@ impl fmt::Display for DiceExprError {
 enum Drop {
     DropHigh,
     DropLow,
+    None,
+}
+
+impl fmt::Display for Drop {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Drop::DropHigh => "-H",
+                Drop::DropLow => "-L",
+                Drop::None => "",
+            }
+        )
+    }
 }
 
 #[derive(PartialEq, Debug)]
@@ -27,7 +42,7 @@ pub struct Dice {
     count: u16,
     sides: u16,
     modifier: i16,
-    drop: Option<Drop>,
+    drop: Drop,
 }
 
 impl Dice {
@@ -71,10 +86,10 @@ impl Dice {
             };
         };
 
-        let mut drop: Option<Drop> = None;
+        let mut drop = Drop::None;
         if let Some(c) = caps.get(4) {
             if count > 1 {
-                drop = Some(match c.as_str().to_lowercase().as_str() {
+                drop = match c.as_str().to_lowercase().as_str() {
                     "-h" => Drop::DropHigh,
                     "-l" => Drop::DropLow,
                     _ => {
@@ -82,7 +97,7 @@ impl Dice {
                             expr: expr.to_string(),
                         })
                     }
-                })
+                }
             } else {
                 return Err(DiceExprError {
                     expr: expr.to_string(),
@@ -108,11 +123,7 @@ impl Dice {
                 n if n < 0 => format!("{}", n),
                 _ => String::from(""),
             },
-            match self.drop {
-                Some(Drop::DropHigh) => "-H",
-                Some(Drop::DropLow) => "-L",
-                None => "",
-            }
+            self.drop,
         )
     }
 
@@ -122,9 +133,9 @@ impl Dice {
 
         let sum: u16 = roll.clone().sum::<u16>()
             - match self.drop {
-                Some(Drop::DropHigh) => roll.max().unwrap(),
-                Some(Drop::DropLow) => roll.min().unwrap(),
-                None => 0,
+                Drop::DropHigh => roll.max().unwrap(),
+                Drop::DropLow => roll.min().unwrap(),
+                Drop::None => 0,
             };
 
         if -self.modifier < sum as i16 {
@@ -155,7 +166,7 @@ mod tests {
                 count: 4,
                 sides: 4,
                 modifier: 0,
-                drop: None,
+                drop: Drop::None,
             },
             dice
         );
@@ -169,7 +180,7 @@ mod tests {
                 count: 4,
                 sides: 4,
                 modifier: 4,
-                drop: Some(Drop::DropHigh),
+                drop: Drop::DropHigh,
             },
             dice
         );
