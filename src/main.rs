@@ -39,10 +39,10 @@ fn main() {
         };
 
         let (roll, rolls) = dice.roll();
-        println!("{}: {}", dice.expr(), roll);
+        println!("{}: {}", dice, roll);
 
         if verbose {
-            println!("Rolls: {:?}", rolls);
+            println!("Rolls: {:?}\n", rolls);
         }
     }
 }

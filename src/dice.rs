@@ -157,6 +157,12 @@ impl Dice {
     }
 }
 
+impl fmt::Display for Dice {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.expr())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
