@@ -1,12 +1,7 @@
 extern crate clap;
-#[macro_use]
-extern crate lazy_static;
-extern crate rand;
-extern crate regex;
+extern crate diceroll;
 
-mod dice;
-
-use crate::dice::Dice;
+use diceroll::Dice;
 use clap::{App, Arg};
 
 fn main() {

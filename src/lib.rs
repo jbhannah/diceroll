@@ -1,3 +1,8 @@
+#[macro_use]
+extern crate lazy_static;
+extern crate rand;
+extern crate regex;
+
 use rand::distributions::{Distribution, Uniform};
 use regex::Regex;
 use std::error::Error;
