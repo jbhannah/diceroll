@@ -36,44 +36,44 @@ impl Dice {
             static ref RE: Regex = Regex::new(r"^(\d+)?d(\d+)([+-]\d+)?(-[LlHh])?$").unwrap();
         }
 
-        let caps = match RE.captures(&expr) {
-            Some(c) => c,
-            None => {
-                return Err(DiceExprError {
-                    expr: expr.to_string(),
-                })
-            }
-        };
+        let caps;
+        if let Some(c) = RE.captures(&expr) {
+            caps = c;
+        } else {
+            return Err(DiceExprError {
+                expr: expr.to_string(),
+            });
+        }
 
-        let count = match caps.get(1) {
-            Some(c) => c.as_str().parse::<u16>().unwrap(),
-            None => 1,
-        };
+        let mut count: u16 = 1;
+        if let Some(c) = caps.get(1) {
+            count = c.as_str().parse().unwrap();
+        }
 
-        let sides = match caps.get(2) {
-            Some(c) => c.as_str().parse::<u16>().unwrap(),
-            None => {
-                return Err(DiceExprError {
-                    expr: expr.to_string(),
-                })
-            }
-        };
+        let sides: u16;
+        if let Some(c) = caps.get(2) {
+            sides = c.as_str().parse().unwrap();
+        } else {
+            return Err(DiceExprError {
+                expr: expr.to_string(),
+            });
+        }
 
-        let modifier = match caps.get(3) {
-            Some(c) => match c.as_str().parse::<i16>() {
+        let mut modifier: i16 = 0;
+        if let Some(c) = caps.get(3) {
+            modifier = match c.as_str().parse::<i16>() {
                 Ok(n) if -n < (count * sides) as i16 => n,
                 _ => {
                     return Err(DiceExprError {
                         expr: expr.to_string(),
                     })
                 }
-            },
-            None => 0,
+            };
         };
 
         let mut drop: Option<Drop> = None;
-        if count > 1 {
-            if let Some(c) = caps.get(4) {
+        if let Some(c) = caps.get(4) {
+            if count > 1 {
                 drop = Some(match c.as_str().to_lowercase().as_str() {
                     "-h" => Drop::DropHigh,
                     "-l" => Drop::DropLow,
@@ -83,6 +83,10 @@ impl Dice {
                         })
                     }
                 })
+            } else {
+                return Err(DiceExprError {
+                    expr: expr.to_string(),
+                });
             }
         }
 
@@ -115,7 +119,6 @@ impl Dice {
     pub fn roll(&self) -> u16 {
         let mut rng = ::rand::thread_rng();
         let roll = self.sample(&mut rng).into_iter();
-        println!("{:?}", roll);
 
         let sum: u16 = roll.clone().sum::<u16>()
             - match self.drop {
