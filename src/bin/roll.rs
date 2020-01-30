@@ -1,8 +1,8 @@
 extern crate clap;
 extern crate diceroll;
 
-use diceroll::Dice;
 use clap::{App, Arg};
+use diceroll::Dice;
 
 fn main() {
     let matches = App::new("diceroll")
@@ -37,7 +37,8 @@ fn main() {
         println!("{}: {}", dice, roll);
 
         if verbose {
-            println!("Rolls: {:?}\n", rolls);
+            let sum: u16 = rolls.iter().sum();
+            println!("Rolls: {:?} = {}\n", rolls, sum);
         }
     }
 }
