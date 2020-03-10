@@ -1,6 +1,6 @@
 # diceroll
 
-[![Build Status](https://travis-ci.com/jbhannah/diceroll.svg?branch=master)](https://travis-ci.com/jbhannah/diceroll)
+[![Cargo](https://github.com/jbhannah/diceroll/workflows/Cargo/badge.svg)][workflow]
 
 A command-line dice roller.
 
@@ -13,3 +13,5 @@ $ roll 1d20
 
 Copyright © 2020 [Jesse B. Hannah](https://jbhannah.net). Licensed under the
 terms of the [MIT License](LICENSE).
+
+[workflow]: https://github.com/jbhannah/diceroll/actions?query=workflow%3ACargo
