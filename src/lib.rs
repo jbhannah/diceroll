@@ -23,8 +23,8 @@ impl fmt::Display for DiceExprError {
 
 #[derive(PartialEq, Debug)]
 enum Drop {
-    DropHigh,
-    DropLow,
+    High,
+    Low,
     None,
 }
 
@@ -34,8 +34,8 @@ impl fmt::Display for Drop {
             f,
             "{}",
             match self {
-                Drop::DropHigh => "-H",
-                Drop::DropLow => "-L",
+                Drop::High => "-H",
+                Drop::Low => "-L",
                 Drop::None => "",
             }
         )
@@ -95,8 +95,8 @@ impl Dice {
         if let Some(c) = caps.get(4) {
             if count > 1 {
                 drop = match c.as_str().to_lowercase().as_str() {
-                    "-h" => Drop::DropHigh,
-                    "-l" => Drop::DropLow,
+                    "-h" => Drop::High,
+                    "-l" => Drop::Low,
                     _ => {
                         return Err(DiceExprError {
                             expr: expr.to_string(),
@@ -111,10 +111,10 @@ impl Dice {
         }
 
         Ok(Dice {
-            count: count,
-            sides: sides,
-            modifier: modifier,
-            drop: drop,
+            count,
+            sides,
+            modifier,
+            drop,
         })
     }
 
@@ -139,8 +139,8 @@ impl Dice {
 
         let sum: u16 = roll.clone().sum::<u16>()
             - match self.drop {
-                Drop::DropHigh => roll.max().unwrap(),
-                Drop::DropLow => roll.min().unwrap(),
+                Drop::High => roll.max().unwrap(),
+                Drop::Low => roll.min().unwrap(),
                 Drop::None => 0,
             };
 
@@ -155,7 +155,7 @@ impl Dice {
     }
 
     fn sample<R: ::rand::Rng>(&self, rng: &mut R) -> Vec<u16> {
-        Uniform::from(1..self.sides + 1)
+        Uniform::from(1..=self.sides)
             .sample_iter(rng)
             .take(self.count as usize)
             .collect()
@@ -195,7 +195,7 @@ mod tests {
                 count: 4,
                 sides: 4,
                 modifier: 4,
-                drop: Drop::DropHigh,
+                drop: Drop::High,
             },
             dice
         );
