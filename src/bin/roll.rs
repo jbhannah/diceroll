@@ -2,7 +2,8 @@ extern crate clap;
 extern crate diceroll;
 
 use clap::{App, Arg};
-use diceroll::Dice;
+use diceroll::expr::DiceExpr;
+use std::convert::TryFrom;
 
 fn main() {
     let matches = App::new("diceroll")
@@ -25,7 +26,7 @@ fn main() {
     let verbose = matches.is_present("verbose");
 
     for expr in matches.values_of("EXPR").unwrap() {
-        let dice = match Dice::new(&expr) {
+        let dice = match DiceExpr::try_from(expr) {
             Ok(d) => d,
             Err(e) => {
                 println!("{}", e);
