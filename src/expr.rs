@@ -4,7 +4,7 @@ use rand::thread_rng;
 use regex::Regex;
 use std::convert::TryFrom;
 use std::error::Error;
-use std::fmt;
+use std::fmt::{self, Display, Formatter};
 use std::num::ParseIntError;
 
 cfg_if! {
@@ -36,8 +36,8 @@ impl From<String> for DiceExprError {
     }
 }
 
-impl fmt::Display for DiceExprError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl Display for DiceExprError {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
             Self::Expr(s) => write!(f, "Invalid dice expression \"{}\"", s),
             Self::ParseIntError(e) => write!(f, "Integer parsing error: {}", e),
@@ -65,8 +65,8 @@ impl TryFrom<&str> for Drop {
     }
 }
 
-impl fmt::Display for Drop {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl Display for Drop {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(
             f,
             "{}",
@@ -75,6 +75,29 @@ impl fmt::Display for Drop {
                 Drop::Low => "-L",
                 Drop::None => "",
             }
+        )
+    }
+}
+
+#[cfg(test)]
+mod drop {
+    use super::*;
+
+    #[test]
+    fn try_from_str_uppercase() {
+        assert_eq!(Ok(Drop::High), Drop::try_from("H"))
+    }
+
+    #[test]
+    fn try_from_str_lowercase() {
+        assert_eq!(Ok(Drop::Low), Drop::try_from("l"))
+    }
+
+    #[test]
+    fn try_from_str_invalid() {
+        assert_eq!(
+            Err(DiceExprError::Drop("x".to_string())),
+            Drop::try_from("x")
         )
     }
 }
@@ -183,7 +206,7 @@ impl DiceExpr {
 }
 
 #[cfg(test)]
-mod tests {
+mod dice_expr {
     use super::*;
 
     #[test]
@@ -242,7 +265,7 @@ mod tests {
     }
 
     #[test]
-    fn try_from_drop_high() {
+    fn try_from_str_drop() {
         let expr = "4d4-H";
 
         assert_eq!(
@@ -257,7 +280,7 @@ mod tests {
     }
 
     #[test]
-    fn try_from_drop_single_die() {
+    fn try_from_str_drop_single_die() {
         let expr = "d4-H";
 
         assert_eq!(
@@ -267,11 +290,11 @@ mod tests {
     }
 
     #[test]
-    fn try_from_drop_invalid() {
+    fn try_from_str_drop_invalid() {
         let expr = "4d4-J";
 
         assert_eq!(
-            Err(DiceExprError::Drop(String::from("j"))),
+            Err(DiceExprError::Expr(String::from(expr))),
             DiceExpr::try_from(expr)
         )
     }
