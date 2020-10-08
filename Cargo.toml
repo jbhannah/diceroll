@@ -5,7 +5,7 @@ authors = ["Jesse B. Hannah <jesse@jbhannah.net>"]
 edition = "2018"
 
 [dependencies]
-cfg-if = "0.1"
+cfg-if = "1.0"
 clap = "2"
 lazy_static = "1"
 mockall = "0.7.1"
