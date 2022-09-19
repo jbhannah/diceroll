@@ -19,7 +19,7 @@ fn main() {
         .arg(
             Arg::with_name("verbose")
                 .long("verbose")
-                .short("v")
+                .short('v')
                 .help("Displays details of each roll"),
         )
         .get_matches();
