@@ -1,6 +1,6 @@
 [package]
 name = "diceroll"
-version = "1.0.2"
+version = "1.0.3"
 authors = ["Jesse B. Hannah <jesse@jbhannah.net>"]
 edition = "2021"
 
