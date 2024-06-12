@@ -1,5 +1,4 @@
 use mockall::automock;
-use rand::distributions::{Distribution, Uniform};
 
 #[derive(PartialEq, Debug)]
 pub struct Die {
@@ -13,7 +12,7 @@ impl Die {
     }
 
     pub fn roll<R: rand::Rng + 'static>(&self, rng: &mut R) -> u16 {
-        Uniform::from(1..=self.sides).sample(rng)
+        rng.gen_range(1..=self.sides)
     }
 }
 
