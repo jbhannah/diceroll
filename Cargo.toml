@@ -1,5 +1,7 @@
 [package]
 name = "diceroll"
+description = "A command-line dice roller."
+license = "MIT"
 version = "1.0.3"
 authors = ["Jesse B. Hannah <jesse@jbhannah.net>"]
 edition = "2021"
