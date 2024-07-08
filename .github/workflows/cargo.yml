@@ -2,15 +2,15 @@ name: Cargo
 on:
   push:
     branches:
-      - master
+      - trunk
   pull_request:
     branches:
-      - master
+      - trunk
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: cargo build --verbose
       - run: cargo test --verbose
