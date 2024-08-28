@@ -1,6 +1,3 @@
-extern crate clap;
-extern crate diceroll;
-
 use clap::{arg, command, ArgAction};
 use diceroll::expr::DiceExpr;
 use std::convert::TryFrom;
