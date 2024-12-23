@@ -1,6 +1,6 @@
 use cfg_if::cfg_if;
 use lazy_static::lazy_static;
-use rand::thread_rng;
+use rand::rng;
 use regex::Regex;
 use std::convert::TryFrom;
 use std::error::Error;
@@ -182,7 +182,7 @@ impl fmt::Display for DiceExpr {
 
 impl DiceExpr {
     pub fn roll(&self) -> (u16, Vec<u16>) {
-        let mut rng = thread_rng();
+        let mut rng = rng();
         let rolls: Vec<u16> = (0..self.count)
             .map(|_| Die::new(self.sides).roll(&mut rng))
             .collect();

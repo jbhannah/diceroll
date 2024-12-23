@@ -12,7 +12,7 @@ impl Die {
     }
 
     pub fn roll<R: rand::Rng + 'static>(&self, rng: &mut R) -> u16 {
-        rng.gen_range(1..=self.sides)
+        rng.random_range(1..=self.sides)
     }
 }
 
